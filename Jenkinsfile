@@ -1,18 +1,30 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "jenkins-docker-demo"
+    }
+
     stages {
+
         stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Run CI Script') {
+        stage('Build Docker Image') {
             steps {
                 sh '''
-                  chmod +x hello.sh
-                  ./hello.sh
+                  docker build -t $IMAGE_NAME:latest .
+                '''
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                sh '''
+                  docker run --rm $IMAGE_NAME:latest
                 '''
             }
         }
@@ -20,10 +32,10 @@ pipeline {
 
     post {
         success {
-            echo 'CI Pipeline completed successfully ✅'
+            echo 'Docker image built and tested successfully ✅'
         }
         failure {
-            echo 'CI Pipeline failed ❌'
+            echo 'Docker build or run failed ❌'
         }
     }
 }
