@@ -9,12 +9,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                checkout([$class: 'GitSCM', 
-          branches: [[name: '*/my-feature-branch']],
-          userRemoteConfigs: [[url: 'https://github.com/v1999-tech/jenkins-ci-demo.git']],
-          extensions: [[$class: 'CleanCheckout']]
-])
-
+                checkout scm
             }
         }
 
